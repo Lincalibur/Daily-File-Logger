@@ -15,46 +15,115 @@ class SetupWizard(tk.Tk):
         self.shared_storage_path = ""
         self.install_path = ""
 
-        self.create_widgets()
+        self.current_step = 0
+        self.steps = [self.create_intro_page, self.create_local_storage_page, self.create_shared_storage_page,
+                      self.create_install_path_page, self.create_finish_page]
+        
+        self.create_intro_page()
 
-    def create_widgets(self):
-        tk.Label(self, text="Welcome to the Daily File Logger Setup Wizard", font=("Arial", 14)).pack(pady=10)
+    def create_intro_page(self):
+        """Introduction page"""
+        self.clear_page()
+        
+        tk.Label(self, text="Welcome to the Daily File Logger Setup Wizard", font=("Arial", 16, "bold")).pack(pady=20)
+        tk.Label(self, text="Click 'Next' to begin the setup process").pack(pady=10)
+        
+        self.next_button = tk.Button(self, text="Next", command=self.next_step)
+        self.next_button.pack(pady=20)
 
-        # Local Storage Path
-        tk.Label(self, text="Select Local Storage Path:").pack(pady=5)
+    def create_local_storage_page(self):
+        """Local Storage Path page"""
+        self.clear_page()
+
+        tk.Label(self, text="Select Local Storage Path:", font=("Arial", 12)).pack(pady=10)
         self.local_storage_button = tk.Button(self, text="Browse", command=self.select_local_storage)
         self.local_storage_button.pack()
 
-        # Shared Storage Path
-        tk.Label(self, text="Select Shared Storage Path:").pack(pady=5)
+        self.back_button = tk.Button(self, text="Back", command=self.previous_step)
+        self.back_button.pack(side=tk.LEFT, padx=20, pady=20)
+        
+        self.next_button = tk.Button(self, text="Next", state=tk.DISABLED, command=self.next_step)
+        self.next_button.pack(side=tk.RIGHT, padx=20, pady=20)
+
+    def create_shared_storage_page(self):
+        """Shared Storage Path page"""
+        self.clear_page()
+
+        tk.Label(self, text="Select Shared Storage Path:", font=("Arial", 12)).pack(pady=10)
         self.shared_storage_button = tk.Button(self, text="Browse", command=self.select_shared_storage)
         self.shared_storage_button.pack()
 
-        # Install Path
-        tk.Label(self, text="Select App Installation Path:").pack(pady=5)
+        self.back_button = tk.Button(self, text="Back", command=self.previous_step)
+        self.back_button.pack(side=tk.LEFT, padx=20, pady=20)
+        
+        self.next_button = tk.Button(self, text="Next", state=tk.DISABLED, command=self.next_step)
+        self.next_button.pack(side=tk.RIGHT, padx=20, pady=20)
+
+    def create_install_path_page(self):
+        """Installation Path page"""
+        self.clear_page()
+
+        tk.Label(self, text="Select App Installation Path:", font=("Arial", 12)).pack(pady=10)
         self.install_button = tk.Button(self, text="Browse", command=self.select_install_path)
         self.install_button.pack()
 
-        # Finish Setup
-        self.finish_button = tk.Button(self, text="Finish Setup", command=self.finish_setup)
-        self.finish_button.pack(pady=20)
+        self.back_button = tk.Button(self, text="Back", command=self.previous_step)
+        self.back_button.pack(side=tk.LEFT, padx=20, pady=20)
+
+        self.next_button = tk.Button(self, text="Next", state=tk.DISABLED, command=self.next_step)
+        self.next_button.pack(side=tk.RIGHT, padx=20, pady=20)
+
+    def create_finish_page(self):
+        """Finish page"""
+        self.clear_page()
+
+        tk.Label(self, text="Setup Complete!", font=("Arial", 16, "bold")).pack(pady=20)
+        tk.Label(self, text="Click 'Finish' to save and build the application").pack(pady=10)
+
+        self.back_button = tk.Button(self, text="Back", command=self.previous_step)
+        self.back_button.pack(side=tk.LEFT, padx=20, pady=20)
+        
+        self.finish_button = tk.Button(self, text="Finish", command=self.finish_setup)
+        self.finish_button.pack(side=tk.RIGHT, padx=20, pady=20)
+
+    def clear_page(self):
+        """Clear the current page's widgets"""
+        for widget in self.winfo_children():
+            widget.destroy()
+
+    def next_step(self):
+        """Navigate to the next step"""
+        self.current_step += 1
+        self.steps[self.current_step]()
+
+    def previous_step(self):
+        """Navigate to the previous step"""
+        self.current_step -= 1
+        self.steps[self.current_step]()
 
     def select_local_storage(self):
+        """Select the local storage path"""
         self.local_storage_path = filedialog.askdirectory(title="Select Local Storage Folder")
         if self.local_storage_path:
             messagebox.showinfo("Path Selected", f"Local Storage: {self.local_storage_path}")
+            self.next_button.config(state=tk.NORMAL)
 
     def select_shared_storage(self):
+        """Select the shared storage path"""
         self.shared_storage_path = filedialog.askdirectory(title="Select Shared Storage Folder")
         if self.shared_storage_path:
             messagebox.showinfo("Path Selected", f"Shared Storage: {self.shared_storage_path}")
+            self.next_button.config(state=tk.NORMAL)
 
     def select_install_path(self):
+        """Select the installation path"""
         self.install_path = filedialog.askdirectory(title="Select Installation Folder")
         if self.install_path:
             messagebox.showinfo("Path Selected", f"Install Path: {self.install_path}")
+            self.next_button.config(state=tk.NORMAL)
 
     def finish_setup(self):
+        """Finish setup and save paths"""
         if not self.local_storage_path or not self.shared_storage_path or not self.install_path:
             messagebox.showerror("Error", "Please select all paths!")
             return
@@ -74,8 +143,9 @@ class SetupWizard(tk.Tk):
         self.build_application(config)
 
     def build_application(self, config):
-        # Replace paths in the template script
-        with open("template_script.py", "r") as template_file:
+        """Build the .exe using PyInstaller"""
+        template_path = os.path.join(os.path.dirname(__file__), "template_script.py")  # Correct path
+        with open(template_path, "r") as template_file:
             script_content = template_file.read()
 
         script_content = script_content.replace("{LOCAL_STORAGE}", config["local_storage"])
@@ -89,7 +159,10 @@ class SetupWizard(tk.Tk):
         subprocess.run([
             "pyinstaller",
             "--onefile",
-            "--icon=your_icon.ico",
+            "--noconsole",  # Hide the terminal window
+            "--icon=assets/1-92dc4e47.ico",  # Use actual icon path here
+            "--distpath", os.path.join(config["install_path"], "dist"),  # Output folder for the .exe
+            "--workpath", os.path.join(config["install_path"], "build"),  # Temporary files folder for PyInstaller
             output_script
         ])
 

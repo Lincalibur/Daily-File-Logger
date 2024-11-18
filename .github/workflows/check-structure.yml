@@ -16,7 +16,11 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v3
 
-    - name: List Project Directory Structure
-      run: |
-        echo "Validating project folder structure..."
-        tree --dirsfirst -L 3
+    - name: Install Required Tools
+      run: sudo apt-get update && sudo apt-get install -y tree python3
+
+    - name: List Project Structure
+      run: tree --dirsfirst -L 2
+
+    - name: Validate Python Scripts
+      run: python3 src/setup_wizard.py
