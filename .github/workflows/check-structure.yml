@@ -1,26 +1,21 @@
-name: Validate Project Structure
-
-on:
-  push:
-    branches:
-      - main
-  pull_request:
-    branches:
-      - main
-
 jobs:
-  validate-structure:
+  setup:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
+      - name: Check out repository
+        uses: actions/checkout@v2
 
-    - name: Install Required Tools
-      run: sudo apt-get update && sudo apt-get install -y tree python3
+      - name: Set up Python 3.x
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8
 
-    - name: List Project Structure
-      run: tree --dirsfirst -L 2
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y python3-tk
+          pip install -r requirements.txt
 
-    - name: Validate Python Scripts
-      run: python3 src/setup_wizard.py
+      - name: Run the setup wizard
+        run: python3 src/setup_wizard.py

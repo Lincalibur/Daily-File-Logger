@@ -9,7 +9,8 @@ class SetupWizard(tk.Tk):
         super().__init__()
 
         self.title("Daily File Logger Setup Wizard")
-        self.geometry("500x400")
+        self.geometry("500x200")
+        self.resizable(False, False)
 
         self.local_storage_path = ""
         self.shared_storage_path = ""
@@ -35,9 +36,12 @@ class SetupWizard(tk.Tk):
         """Local Storage Path page"""
         self.clear_page()
 
-        tk.Label(self, text="Select Local Storage Path:", font=("Arial", 12)).pack(pady=10)
+        tk.Label(self, text="Select the Local Storage folder where your files will be stored.", font=("Arial", 10)).pack(pady=10)
         self.local_storage_button = tk.Button(self, text="Browse", command=self.select_local_storage)
         self.local_storage_button.pack()
+
+        self.local_storage_label = tk.Label(self, text="No path selected", font=("Arial", 9))
+        self.local_storage_label.pack(pady=5)
 
         self.back_button = tk.Button(self, text="Back", command=self.previous_step)
         self.back_button.pack(side=tk.LEFT, padx=20, pady=20)
@@ -49,9 +53,12 @@ class SetupWizard(tk.Tk):
         """Shared Storage Path page"""
         self.clear_page()
 
-        tk.Label(self, text="Select Shared Storage Path:", font=("Arial", 12)).pack(pady=10)
+        tk.Label(self, text="Select the Shared Storage folder where shared files will be kept.", font=("Arial", 10)).pack(pady=10)
         self.shared_storage_button = tk.Button(self, text="Browse", command=self.select_shared_storage)
         self.shared_storage_button.pack()
+
+        self.shared_storage_label = tk.Label(self, text="No path selected", font=("Arial", 9))
+        self.shared_storage_label.pack(pady=5)
 
         self.back_button = tk.Button(self, text="Back", command=self.previous_step)
         self.back_button.pack(side=tk.LEFT, padx=20, pady=20)
@@ -63,9 +70,12 @@ class SetupWizard(tk.Tk):
         """Installation Path page"""
         self.clear_page()
 
-        tk.Label(self, text="Select App Installation Path:", font=("Arial", 12)).pack(pady=10)
+        tk.Label(self, text="Select the installation folder where the app will be installed.", font=("Arial", 10)).pack(pady=10)
         self.install_button = tk.Button(self, text="Browse", command=self.select_install_path)
         self.install_button.pack()
+
+        self.install_label = tk.Label(self, text="No path selected", font=("Arial", 9))
+        self.install_label.pack(pady=5)
 
         self.back_button = tk.Button(self, text="Back", command=self.previous_step)
         self.back_button.pack(side=tk.LEFT, padx=20, pady=20)
@@ -105,21 +115,21 @@ class SetupWizard(tk.Tk):
         """Select the local storage path"""
         self.local_storage_path = filedialog.askdirectory(title="Select Local Storage Folder")
         if self.local_storage_path:
-            messagebox.showinfo("Path Selected", f"Local Storage: {self.local_storage_path}")
+            self.local_storage_label.config(text=self.local_storage_path)  # Update the label with selected path
             self.next_button.config(state=tk.NORMAL)
 
     def select_shared_storage(self):
         """Select the shared storage path"""
         self.shared_storage_path = filedialog.askdirectory(title="Select Shared Storage Folder")
         if self.shared_storage_path:
-            messagebox.showinfo("Path Selected", f"Shared Storage: {self.shared_storage_path}")
+            self.shared_storage_label.config(text=self.shared_storage_path)  # Update the label with selected path
             self.next_button.config(state=tk.NORMAL)
 
     def select_install_path(self):
         """Select the installation path"""
         self.install_path = filedialog.askdirectory(title="Select Installation Folder")
         if self.install_path:
-            messagebox.showinfo("Path Selected", f"Install Path: {self.install_path}")
+            self.install_label.config(text=self.install_path)  # Update the label with selected path
             self.next_button.config(state=tk.NORMAL)
 
     def finish_setup(self):
