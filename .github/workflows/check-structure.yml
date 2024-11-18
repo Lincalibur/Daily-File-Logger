@@ -1,3 +1,13 @@
+name: Validate Project Structure
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
 jobs:
   setup:
     runs-on: ubuntu-latest

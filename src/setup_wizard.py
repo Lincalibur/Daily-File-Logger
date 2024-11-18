@@ -115,7 +115,7 @@ class SetupWizard(tk.Tk):
         """Select the local storage path"""
         self.local_storage_path = filedialog.askdirectory(title="Select Local Storage Folder")
         if self.local_storage_path:
-            self.local_storage_label.config(text=self.local_storage_path)  # Update the label with selected path
+            self.local_storage_label.config(text=self.local_storage_path)
             self.next_button.config(state=tk.NORMAL)
 
     def select_shared_storage(self):
