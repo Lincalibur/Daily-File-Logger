@@ -1,4 +1,5 @@
 # Daily File Logger
+<img src="https://media1.giphy.com/media/v1.Y2lkPTc5MGI3NjExNHh2a3FxaXptYzdiamd4bnQ2bjI1bW04c2IybGk1ZGZkbnNtN3BsdCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/rqgeA1ckKGdlevO5pg/giphy.gif" alt="Glitch Banner" style="width: 100%; max-height: 400px; object-fit: cover; display: block; margin-bottom: 24px;" />
 
 ## Overview
 **Daily File Logger** is a Python-based automation tool designed to simplify your daily file management workflow. It creates daily folders with the current date, copies files from the previous day's folder, and zips the folder at the end of the day. Finally, it uploads the zipped archive to a shared drive such as Google Drive.
